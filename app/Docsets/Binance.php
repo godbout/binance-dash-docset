@@ -79,7 +79,6 @@ class Binance extends BaseDocset
     {
         $entries = collect();
 
-
         $crawler->filter('h2')->each(function (HtmlPageCrawler $node) use ($entries, $file) {
             $entries->push([
                 'name' => trim($node->text()),
@@ -95,8 +94,33 @@ class Binance extends BaseDocset
     {
         $crawler = HtmlPageCrawler::create(Storage::get($file));
 
-        //
+        $this->removeHeader($crawler);
+        $this->removeLeftSidebar($crawler);
+
+        $this->insertDashTableOfContents($crawler);
 
         return $crawler->saveHTML();
+    }
+
+    protected function removeHeader(HtmlPageCrawler $crawler)
+    {
+        $crawler->filter('body > header')->remove();
+    }
+
+    protected function removeLeftSidebar(HtmlPageCrawler $crawler)
+    {
+        $crawler->filter('.toc-wrapper')->remove();
+    }
+
+    protected function insertDashTableOfContents(HtmlPageCrawler $crawler)
+    {
+        $crawler->filter('h1#change-log')
+            ->before('<a name="//apple_ref/cpp/Section/Top" class="dashAnchor"></a>');
+
+        $crawler->filter('h2, h3, h4')->each(static function (HtmlPageCrawler $node) {
+            $node->before(
+                '<a id="' . Str::slug($node->text()) . '" name="//apple_ref/cpp/Section/' . rawurlencode($node->text()) . '" class="dashAnchor"></a>'
+            );
+        });
     }
 }
