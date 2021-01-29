@@ -1,0 +1,5 @@
+{
+    "require": {
+        "godbout/dash-docset-builder": "^2.0"
+    }
+}
