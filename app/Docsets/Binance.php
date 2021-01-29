@@ -11,13 +11,42 @@ class Binance extends BaseDocset
 {
     public const CODE = 'binance';
     public const NAME = 'Binance';
-    public const URL = 'binance.com';
-    public const INDEX = 'docs/index.html';
+    public const URL = 'binance-docs.github.io';
+    public const INDEX = 'apidocs/futures/en/index.html';
     public const PLAYGROUND = '';
     public const ICON_16 = 'favicon-16x16.png';
     public const ICON_32 = 'favicon-32x32.png';
     public const EXTERNAL_DOMAINS = [];
 
+
+    public function grab(): bool
+    {
+        $toIgnore = implode('|', [
+            '/cn/',
+            '/delivery/',
+            '/spot/',
+            '/voptions/',
+        ]);
+
+        system(
+            "echo; wget binance-docs.github.io/apidocs/futures/en/ \
+                --mirror \
+                --trust-server-names \
+                --reject-regex='{$toIgnore}' \
+                --page-requisites \
+                --adjust-extension \
+                --convert-links \
+                --span-hosts \
+                --domains={$this->externalDomains()} \
+                --directory-prefix=storage/{$this->downloadedDirectory()} \
+                -e robots=off \
+                --quiet \
+                --show-progress",
+            $result
+        );
+
+        return $result === 0;
+    }
 
     public function entries(string $file): Collection
     {
