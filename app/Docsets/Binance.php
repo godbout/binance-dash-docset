@@ -14,8 +14,8 @@ class Binance extends BaseDocset
     public const URL = 'binance-docs.github.io';
     public const INDEX = 'apidocs/futures/en/index.html';
     public const PLAYGROUND = '';
-    public const ICON_16 = '../../icon.png';
-    public const ICON_32 = '../../icon@2x.png';
+    public const ICON_16 = '../../icons/icon.png';
+    public const ICON_32 = '../../icons/icon@2x.png';
     public const EXTERNAL_DOMAINS = [];
 
 
